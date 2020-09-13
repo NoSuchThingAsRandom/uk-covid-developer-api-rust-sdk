@@ -1,7 +1,30 @@
-use crate::strum::IntoEnumIterator;
+use std::fmt;
 use std::fmt::Write;
 
-#[derive(EnumIter, Debug)]
+use crate::strum::IntoEnumIterator;
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct ApiError {
+    pub kind: ApiErrorKind,
+    pub msg: String,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum ApiErrorKind {
+    InvalidFilter,
+    InvalidFilterValue,
+    InvalidStructure,
+}
+
+impl fmt::Display for ApiError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Type:{:?}, Msg: {}", self.kind, self.msg)
+    }
+}
+
+impl std::error::Error for ApiError {}
+
+#[derive(EnumIter, Debug, PartialEq)]
 /// All valid Filter fields
 ///
 /// Given by: https://coronavirus.data.gov.uk/developers-guide#params-filters
